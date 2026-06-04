@@ -21,7 +21,7 @@
       --radius-xl: 20px;
       --radius-full: 9999px;
     }
-    body { font-family: 'Inter', sans-serif; background: #080c14; color: var(--text-primary); line-height: 1.6; }
+    body { font-family: 'Inter', sans-serif; background: #080c14; color: var(--text-primary); line-height: 1.6; overflow-x: hidden; }
     .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
     /* ===== NAVBAR ===== */
@@ -30,15 +30,65 @@
     .nav-logo { font-size: 22px; font-weight: 800; color: var(--text-primary); text-decoration: none; }
     .nav-links { display: flex; gap: 32px; list-style: none; }
     .nav-links a { font-size: 14px; font-weight: 500; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--text-primary); }
+    .nav-links a:hover { color: var(--text-primary); }
+    
+    /* Mobile Menu Button */
+    .menu-toggle { display: none; background: transparent; border: none; cursor: pointer; padding: 10px; z-index: 1001; }
+    .menu-toggle span { display: block; width: 25px; height: 2px; background: var(--text-primary); margin: 5px 0; transition: 0.3s; }
+    .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .menu-toggle.active span:nth-child(2) { opacity: 0; }
+    .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
+    
+    /* Mobile Navigation */
+    .mobile-nav { position: fixed; top: 72px; left: -100%; width: 80%; max-width: 300px; height: calc(100vh - 72px); background: rgba(8,12,20,0.98); backdrop-filter: blur(20px); border-right: 1px solid var(--border-subtle); transition: left 0.3s ease; z-index: 999; padding: 30px 20px; }
+    .mobile-nav.active { left: 0; }
+    .mobile-nav ul { list-style: none; }
+    .mobile-nav li { margin-bottom: 20px; }
+    .mobile-nav a { color: var(--text-secondary); text-decoration: none; font-size: 16px; font-weight: 500; display: block; padding: 8px 0; transition: color 0.2s; }
+    .mobile-nav a:hover { color: var(--accent-cyan); }
+    .mobile-nav-overlay { position: fixed; top: 72px; left: 0; width: 100%; height: calc(100vh - 72px); background: rgba(0,0,0,0.5); z-index: 998; opacity: 0; visibility: hidden; transition: 0.3s; }
+    .mobile-nav-overlay.active { opacity: 1; visibility: visible; }
+    
     .nav-actions { display: flex; align-items: center; gap: 16px; }
-    .nav-cart { position: relative; color: var(--text-secondary); text-decoration: none; }
-    .cart-badge { position: absolute; top: -8px; right: -12px; width: 18px; height: 18px; background: var(--accent-cyan); color: #000; font-size: 10px; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
     .btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 24px; font-size: 14px; font-weight: 600; border-radius: var(--radius-full); text-decoration: none; cursor: pointer; transition: all 0.2s; border: none; }
     .btn-primary { background: linear-gradient(135deg, #00d4ff, #0099cc); color: #000; }
     .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,212,255,0.4); }
-    .btn-secondary { background: transparent; color: var(--text-primary); border: 1px solid var(--border-medium); }
-    .btn-secondary:hover { background: rgba(255,255,255,0.05); }
+
+    /* Floating Cart Button */
+    .floating-cart {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,212,255,0.4);
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+    .floating-cart:hover { transform: scale(1.1); box-shadow: 0 6px 25px rgba(0,212,255,0.6); }
+    .floating-cart svg { width: 28px; height: 28px; color: #000; }
+    .floating-cart .cart-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ff4444;
+      color: white;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
 
     /* ===== SEARCH BAR ===== */
     .search-section { padding: 30px 0 0 0; background: #080c14; }
@@ -73,15 +123,102 @@
     .btn-add-cart { width: 100%; margin-top: 12px; padding: 10px; background: transparent; border: 1px solid var(--border-medium); border-radius: var(--radius-full); color: var(--text-primary); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
     .btn-add-cart:hover { background: var(--accent-cyan); color: #000; }
 
-    /* Footer */
-    .footer { background: #0d1320; border-top: 1px solid var(--border-subtle); padding: 60px 0 24px; margin-top: 60px; }
-    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 48px; margin-bottom: 40px; }
-    .footer-bottom { text-align: center; color: var(--text-muted); font-size: 13px; padding-top: 24px; border-top: 1px solid var(--border-subtle); }
+    /* ===== PROFESSIONAL FOOTER (Home Page Style) ===== */
+    .footer {
+      background: #0d1320;
+      border-top: 1px solid var(--border-subtle);
+      padding: 60px 0 24px;
+      margin-top: 60px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 48px;
+      margin-bottom: 40px;
+    }
+    .footer-brand p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-top: 12px;
+      line-height: 1.7;
+    }
+    .footer-social {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .footer-social a {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .footer-social a:hover {
+      background: var(--accent-cyan);
+      color: #000;
+      border-color: var(--accent-cyan);
+    }
+    .footer-column h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+    .footer-column ul {
+      list-style: none;
+    }
+    .footer-column li {
+      margin-bottom: 10px;
+    }
+    .footer-column a {
+      color: var(--text-secondary);
+      font-size: 14px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-column a:hover {
+      color: var(--accent-cyan);
+    }
+    .footer-bottom {
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
 
     @media (max-width: 1200px) { .products-grid { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 1024px) { .products-grid { grid-template-columns: repeat(2, 1fr); } .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; } }
-    @media (max-width: 768px) { .nav-links { display: none; } .products-grid { grid-template-columns: repeat(2, 1fr); } .footer-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 480px) { .products-grid { grid-template-columns: 1fr; } .footer-grid { grid-template-columns: 1fr; text-align: center; } .filter-bar { flex-direction: column; align-items: flex-start; } .search-box input { padding: 12px 16px; } .search-box button { padding: 0 18px; } }
+    @media (max-width: 768px) { 
+      .nav-links { display: none; } 
+      .menu-toggle { display: block; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); } 
+      .footer-grid { grid-template-columns: repeat(2, 1fr); } 
+    }
+    @media (max-width: 640px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        text-align: center;
+      }
+      .footer-social {
+        justify-content: center;
+      }
+    }
+    @media (max-width: 480px) { 
+      .products-grid { grid-template-columns: 1fr; } 
+      .search-box input { padding: 12px 16px; } 
+      .search-box button { padding: 0 18px; } 
+      .floating-cart { width: 50px; height: 50px; bottom: 20px; right: 20px; }
+      .floating-cart svg { width: 24px; height: 24px; }
+    }
   </style>
 </head>
 <body>
@@ -98,11 +235,37 @@
         <li><a href="index.html#contact">Contact</a></li>
       </ul>
       <div class="nav-actions">
-        <a href="cart.html" class="nav-cart"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span class="cart-badge" id="cartBadge">0</span></a>
-        <div style="display: flex; align-items: center; gap: 10px;"><span id="userNameDisplay" style="color: #00d4ff; font-weight: 500;"></span><a href="login.html" class="btn btn-primary" id="authBtn">Sign In</a></div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span id="userNameDisplay" style="color: #00d4ff; font-weight: 500;"></span>
+          <a href="login.html" class="btn btn-primary" id="authBtn"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+        </div>
       </div>
+      <button class="menu-toggle" id="menuToggle">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
+
+  <!-- Mobile Navigation Menu -->
+  <div class="mobile-nav" id="mobileNav">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="orders.html">My Orders</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+  <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+
+  <!-- Floating Cart Button -->
+  <a href="cart.html" class="floating-cart" id="floatingCart">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+    </svg>
+    <span class="cart-badge" id="floatingCartBadge">0</span>
+  </a>
 
   <!-- PRODUCTS PAGE -->
   <section class="products-page">
@@ -112,7 +275,6 @@
         <p>Discover our complete collection of premium home electronics</p>
       </div>
       
-      <!-- SEARCH BAR -->
       <div class="search-section">
         <div class="search-container">
           <div class="search-box">
@@ -136,16 +298,63 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="container"><div class="footer-grid"><div><h3><i class="fas fa-microchip"></i> Zeetech</h3><p style="color:var(--text-secondary); margin-top:12px;">Premium home electronics for the modern home.</p></div>
-    <div><h4>Quick Links</h4><ul style="list-style:none;"><li><a href="index.html" style="color:var(--text-secondary); text-decoration:none;">Home</a></li><li><a href="products.html" style="color:var(--text-secondary); text-decoration:none;">Products</a></li><li><a href="cart.html" style="color:var(--text-secondary); text-decoration:none;">Cart</a></li></ul></div>
-    <div><h4>Support</h4><ul style="list-style:none;"><li><a href="#" style="color:var(--text-secondary); text-decoration:none;">Contact Us</a></li><li><a href="#" style="color:var(--text-secondary); text-decoration:none;">FAQs</a></li></ul></div>
-    <div><h4>Contact Info</h4><ul style="list-style:none;"><li><i class="fas fa-map-marker-alt"></i> Karachi, Pakistan</li><li><i class="fas fa-envelope"></i> support@zeetech.pk</li><li><i class="fas fa-phone"></i> +92 300 1234567</li></ul></div></div>
-    <div class="footer-bottom">&copy; 2024 Zeetech. All rights reserved.</div></div>
+  <!-- PROFESSIONAL FOOTER -->
+  <footer class="footer" id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3 class="nav-logo">Zeetech</h3>
+          <p>Premium home electronics for the modern home. Quality products at best prices.</p>
+          <div class="footer-social">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div class="footer-column">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="cart.html">Cart</a></li>
+            <li><a href="orders.html">My Orders</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">Warranty</a></li>
+            <li><a href="#">Returns</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">FAQs</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>Contact Info</h4>
+          <ul>
+            <li><i class="fas fa-map-marker-alt"></i> Karachi, Pakistan</li>
+            <li><i class="fas fa-envelope"></i> support@zeetech.pk</li>
+            <li><i class="fas fa-phone"></i> +92 300 1234567</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2024 Zeetech. All rights reserved.
+      </div>
+    </div>
   </footer>
 
   <script>
+    // ===== MOBILE MENU =====
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+    function toggleMobileMenu() { menuToggle.classList.toggle('active'); mobileNav.classList.toggle('active'); mobileNavOverlay.classList.toggle('active'); document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : ''; }
+    function closeMobileMenu() { menuToggle.classList.remove('active'); mobileNav.classList.remove('active'); mobileNavOverlay.classList.remove('active'); document.body.style.overflow = ''; }
+    menuToggle.addEventListener('click', toggleMobileMenu);
+    mobileNavOverlay.addEventListener('click', closeMobileMenu);
+    document.querySelectorAll('.mobile-nav a').forEach(link => { link.addEventListener('click', closeMobileMenu); });
+
     // ===== PRODUCTS DATABASE =====
     const products = [
       { id: 1, name: "Dawlance AC Inverter 1.5 Ton", category: "ac", price: 159999, originalPrice: 189999, discount: 16, image: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&h=300&fit=crop" },
@@ -166,7 +375,6 @@
       { id: 16, name: "Xiaomi 360° Home Camera", category: "cctv", price: 12999, originalPrice: 17999, discount: 27, image: "https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?w=400&h=300&fit=crop" }
     ];
 
-    let allProducts = [...products];
     let currentCategory = 'all';
     let currentSearchTerm = '';
 
@@ -178,13 +386,11 @@
       if (loggedInUser && loggedInUser.isLoggedIn) {
         userNameSpan.innerHTML = `<i class="fas fa-user-circle"></i> ${loggedInUser.name}`;
         authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
-        authBtn.href = '#';
         authBtn.onclick = function(e) { e.preventDefault(); localStorage.removeItem('zeetech_logged_in'); showToast('Logged out successfully!'); setTimeout(() => window.location.reload(), 1500); };
       } else {
         userNameSpan.innerHTML = '';
         authBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
         authBtn.href = 'login.html';
-        authBtn.onclick = null;
       }
     }
     updateUserProfile();
@@ -192,7 +398,11 @@
     // ===== CART =====
     let cart = JSON.parse(localStorage.getItem('zeetech_cart')) || [];
     function saveCart() { localStorage.setItem('zeetech_cart', JSON.stringify(cart)); }
-    function updateCartBadge() { const badge = document.getElementById('cartBadge'); if (badge) badge.textContent = cart.reduce((s,i)=>s+i.qty,0); }
+    function updateCartBadge() { 
+      const total = cart.reduce((s,i)=>s+i.qty,0);
+      const floatingBadge = document.getElementById('floatingCartBadge');
+      if(floatingBadge) floatingBadge.textContent = total;
+    }
     function addToCart(id) {
       const product = products.find(p=>p.id===id);
       const existing = cart.find(i=>i.id===id);
@@ -201,7 +411,6 @@
     }
     function showToast(msg) { const t=document.createElement('div'); t.textContent=msg; t.style.cssText=`position:fixed; bottom:24px; right:24px; background:linear-gradient(135deg,#00d4ff,#0099cc); color:#000; padding:14px 24px; border-radius:12px; font-weight:600; z-index:10000; animation:slideIn 0.3s ease;`; document.body.appendChild(t); setTimeout(()=>t.remove(),2500); }
 
-    // ===== SEARCH FUNCTION =====
     function searchProducts() {
       currentSearchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
       filterAndRender();
@@ -209,91 +418,35 @@
 
     function filterAndRender() {
       let filtered = [...products];
-      
-      // Filter by category
-      if (currentCategory !== 'all') {
-        filtered = filtered.filter(p => p.category === currentCategory);
-      }
-      
-      // Filter by search term
-      if (currentSearchTerm !== '') {
-        filtered = filtered.filter(p => 
-          p.name.toLowerCase().includes(currentSearchTerm) ||
-          p.category.toLowerCase().includes(currentSearchTerm)
-        );
-      }
-      
+      if (currentCategory !== 'all') filtered = filtered.filter(p => p.category === currentCategory);
+      if (currentSearchTerm !== '') filtered = filtered.filter(p => p.name.toLowerCase().includes(currentSearchTerm) || p.category.toLowerCase().includes(currentSearchTerm));
       renderProducts(filtered);
     }
 
-    // ===== RENDER PRODUCTS =====
     function renderProducts(productsToRender) {
       const grid = document.getElementById('productsGrid');
       const count = productsToRender.length;
       document.getElementById('productsCount').innerHTML = `Showing ${count} product${count !== 1 ? 's' : ''}`;
-      
-      if (count === 0) {
-        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:60px; color:var(--text-secondary);"><i class="fas fa-search" style="font-size:48px; margin-bottom:16px; opacity:0.5;"></i><p>No products found. Try a different search term.</p></div>`;
-        return;
-      }
-      
-      grid.innerHTML = productsToRender.map(p=>`
-        <div class="product-card">
-          <div class="product-image"><img src="${p.image}">${p.discount?`<span class="discount-tag">-${p.discount}%</span>`:''}</div>
-          <div class="product-info">
-            <h3 class="product-title">${p.name}</h3>
-            <div class="product-price">Rs. ${p.price.toLocaleString()}${p.originalPrice?`<span class="original-price">Rs. ${p.originalPrice.toLocaleString()}</span>`:''}</div>
-            <button class="btn-add-cart" onclick="addToCart(${p.id})"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-          </div>
-        </div>
-      `).join('');
+      if (count === 0) { grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:60px;"><i class="fas fa-search" style="font-size:48px; opacity:0.5;"></i><p>No products found.</p></div>`; return; }
+      grid.innerHTML = productsToRender.map(p=>`<div class="product-card"><div class="product-image"><img src="${p.image}">${p.discount?`<span class="discount-tag">-${p.discount}%</span>`:''}</div><div class="product-info"><h3 class="product-title">${p.name}</h3><div class="product-price">Rs. ${p.price.toLocaleString()}${p.originalPrice?`<span class="original-price">Rs. ${p.originalPrice.toLocaleString()}</span>`:''}</div><button class="btn-add-cart" onclick="addToCart(${p.id})"><i class="fas fa-shopping-cart"></i> Add to Cart</button></div></div>`).join('');
     }
 
-    // ===== FILTER BUTTONS =====
-    function setActiveFilter() {
-      document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.dataset.cat === currentCategory) {
-          btn.classList.add('active');
-        }
-      });
-    }
-
+    // Filter buttons
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
         currentCategory = btn.dataset.cat;
-        setActiveFilter();
         filterAndRender();
-        // Update URL without reload
-        const url = new URL(window.location);
-        if (currentCategory === 'all') {
-          url.searchParams.delete('cat');
-        } else {
-          url.searchParams.set('cat', currentCategory);
-        }
-        window.history.pushState({}, '', url);
       });
     });
 
-    // Get URL parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const catParam = urlParams.get('cat');
-    if (catParam && ['ac', 'cooler', 'refrigerator', 'cctv'].includes(catParam)) {
-      currentCategory = catParam;
-    }
-    setActiveFilter();
+    document.getElementById('searchInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') searchProducts(); });
 
-    // Enter key search
-    document.getElementById('searchInput').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') searchProducts();
-    });
-
-    // ===== ANIMATION =====
     const s = document.createElement('style');
     s.textContent = '@keyframes slideIn{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}';
     document.head.appendChild(s);
 
-    // ===== INIT =====
     filterAndRender();
     updateCartBadge();
   </script>

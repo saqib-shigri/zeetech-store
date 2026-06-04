@@ -2,26 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>My Orders - Zeetech</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --bg-primary: #080c14;
       --accent-cyan: #00d4ff;
-      --text-primary: #fff;
+      --text-primary: #ffffff;
       --text-secondary: #94a3b8;
       --text-muted: #64748b;
-      --border-subtle: rgba(255, 255, 255, 0.06);
-      --border-medium: rgba(255, 255, 255, 0.1);
+      --border-subtle: rgba(255,255,255,0.06);
+      --border-medium: rgba(255,255,255,0.1);
       --success: #22c55e;
       --warning: #f59e0b;
       --radius-md: 12px;
@@ -29,399 +23,196 @@
       --radius-xl: 20px;
       --radius-full: 9999px;
     }
+    body { font-family: 'Inter', sans-serif; background: #080c14; color: var(--text-primary); line-height: 1.6; overflow-x: hidden; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-    }
+    /* ===== NAVBAR ===== */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; background: rgba(8,12,20,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-subtle); z-index: 1000; }
+    .navbar-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .nav-logo { font-size: 22px; font-weight: 800; color: var(--text-primary); text-decoration: none; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 14px; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text-primary); }
+    
+    /* Mobile Menu Button */
+    .menu-toggle { display: none; background: transparent; border: none; cursor: pointer; padding: 10px; z-index: 1001; }
+    .menu-toggle span { display: block; width: 25px; height: 2px; background: var(--text-primary); margin: 5px 0; transition: 0.3s; }
+    .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .menu-toggle.active span:nth-child(2) { opacity: 0; }
+    .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
+    
+    /* Mobile Navigation */
+    .mobile-nav { position: fixed; top: 72px; left: -100%; width: 80%; max-width: 300px; height: calc(100vh - 72px); background: rgba(8,12,20,0.98); backdrop-filter: blur(20px); border-right: 1px solid var(--border-subtle); transition: left 0.3s ease; z-index: 999; padding: 30px 20px; }
+    .mobile-nav.active { left: 0; }
+    .mobile-nav ul { list-style: none; }
+    .mobile-nav li { margin-bottom: 20px; }
+    .mobile-nav a { color: var(--text-secondary); text-decoration: none; font-size: 16px; font-weight: 500; display: block; padding: 8px 0; transition: color 0.2s; }
+    .mobile-nav a:hover { color: var(--accent-cyan); }
+    .mobile-nav-overlay { position: fixed; top: 72px; left: 0; width: 100%; height: calc(100vh - 72px); background: rgba(0,0,0,0.5); z-index: 998; opacity: 0; visibility: hidden; transition: 0.3s; }
+    .mobile-nav-overlay.active { opacity: 1; visibility: visible; }
+    
+    .nav-actions { display: flex; gap: 16px; align-items: center; }
+    .btn { padding: 10px 24px; font-size: 13px; font-weight: 600; border-radius: var(--radius-full); text-decoration: none; cursor: pointer; transition: all 0.2s; border: none; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-primary { background: linear-gradient(135deg, #00d4ff, #0099cc); color: #000; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,212,255,0.4); }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* Navbar */
-    .navbar {
+    /* Floating Cart Button */
+    .floating-cart {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: rgba(8, 12, 20, 0.95);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border-subtle);
-      z-index: 1000;
-    }
-
-    .navbar-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 72px;
-    }
-
-    .nav-logo {
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--text-primary);
-      text-decoration: none;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-size: 14px;
-      color: var(--text-secondary);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover, .nav-links a.active {
-      color: var(--text-primary);
-    }
-
-    .nav-actions {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-    }
-
-    .nav-cart {
-      position: relative;
-      color: var(--text-secondary);
-      text-decoration: none;
-    }
-
-    .cart-badge {
-      position: absolute;
-      top: -8px;
-      right: -12px;
-      width: 18px;
-      height: 18px;
-      background: var(--accent-cyan);
-      color: #000;
-      font-size: 10px;
-      font-weight: 700;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .btn {
-      padding: 10px 24px;
-      font-size: 13px;
-      font-weight: 600;
-      border-radius: var(--radius-full);
-      text-decoration: none;
+      z-index: 999;
       cursor: pointer;
-      transition: all 0.2s;
-      border: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #00d4ff, #0099cc);
-      color: #000;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
-    }
-
-    .btn-secondary {
-      background: transparent;
-      border: 1px solid var(--border-medium);
-      color: var(--text-primary);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    /* Orders Page */
-    .orders-page {
-      padding: 120px 0 80px;
-      min-height: 100vh;
-    }
-
-    .orders-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 40px;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .orders-header h1 {
-      font-size: 32px;
-      font-weight: 700;
-    }
-
-    .orders-header h1 i {
-      color: var(--accent-cyan);
-      margin-right: 12px;
-    }
-
-    .orders-count {
-      background: rgba(0, 212, 255, 0.1);
-      padding: 8px 16px;
-      border-radius: 30px;
-      font-size: 14px;
-      color: var(--accent-cyan);
-    }
-
-    /* No Orders */
-    .no-orders {
-      text-align: center;
-      padding: 80px 20px;
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--border-subtle);
-    }
-
-    .no-orders i {
-      font-size: 64px;
-      color: var(--text-muted);
-      margin-bottom: 20px;
-      opacity: 0.5;
-    }
-
-    .no-orders h3 {
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-
-    .no-orders p {
-      color: var(--text-secondary);
-      margin-bottom: 25px;
-    }
-
-    /* Order Card */
-    .order-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      margin-bottom: 24px;
-      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,212,255,0.4);
       transition: all 0.3s;
+      text-decoration: none;
     }
-
-    .order-card:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: var(--border-medium);
-    }
-
-    .order-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 24px;
-      background: rgba(0, 212, 255, 0.05);
-      border-bottom: 1px solid var(--border-subtle);
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .order-id {
-      font-weight: 700;
-      font-size: 16px;
-    }
-
-    .order-id i {
-      color: var(--accent-cyan);
-      margin-right: 8px;
-    }
-
-    .order-date {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .order-date i {
-      margin-right: 6px;
-    }
-
-    .order-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 12px;
-      border-radius: 30px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .status-delivered {
-      background: rgba(34, 197, 94, 0.15);
-      color: #22c55e;
-    }
-
-    .status-processing {
-      background: rgba(245, 158, 11, 0.15);
-      color: #f59e0b;
-    }
-
-    .status-shipped {
-      background: rgba(0, 212, 255, 0.15);
-      color: #00d4ff;
-    }
-
-    .order-body {
-      padding: 20px 24px;
-    }
-
-    .order-items {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .order-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border-subtle);
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .order-item:last-child {
-      border-bottom: none;
-    }
-
-    .order-item-info {
+    .floating-cart:hover { transform: scale(1.1); box-shadow: 0 6px 25px rgba(0,212,255,0.6); }
+    .floating-cart svg { width: 28px; height: 28px; color: #000; }
+    .floating-cart .cart-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ff4444;
+      color: white;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-
-    .order-item-img {
-      width: 50px;
-      height: 50px;
-      border-radius: 8px;
-      overflow: hidden;
-      background: #1a1f2e;
-    }
-
-    .order-item-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .order-item-name {
-      font-weight: 500;
-      font-size: 14px;
-    }
-
-    .order-item-qty {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .order-item-price {
-      font-weight: 600;
-      color: var(--accent-cyan);
-    }
-
-    .order-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 24px;
-      border-top: 1px solid var(--border-subtle);
-      background: rgba(0, 0, 0, 0.2);
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .order-total {
-      font-size: 18px;
+      justify-content: center;
+      font-size: 11px;
       font-weight: 700;
     }
 
-    .order-total span {
-      color: var(--accent-cyan);
-    }
+    /* ===== ORDERS PAGE ===== */
+    .orders-page { padding: 120px 0 80px; min-height: 100vh; }
+    .orders-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
+    .orders-header h1 { font-size: 32px; font-weight: 700; }
+    .orders-header h1 i { color: var(--accent-cyan); margin-right: 12px; }
+    .orders-count { background: rgba(0,212,255,0.1); padding: 8px 16px; border-radius: 30px; font-size: 14px; color: var(--accent-cyan); }
+    .no-orders { text-align: center; padding: 80px 20px; background: rgba(255,255,255,0.02); border-radius: var(--radius-xl); border: 1px solid var(--border-subtle); }
+    .no-orders i { font-size: 64px; color: var(--text-muted); margin-bottom: 20px; opacity: 0.5; }
+    .no-orders h3 { font-size: 24px; margin-bottom: 10px; }
+    .no-orders p { color: var(--text-secondary); margin-bottom: 25px; }
+    .order-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); margin-bottom: 24px; overflow: hidden; transition: all 0.3s; }
+    .order-card:hover { background: rgba(255,255,255,0.05); border-color: var(--border-medium); }
+    .order-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; background: rgba(0,212,255,0.05); border-bottom: 1px solid var(--border-subtle); flex-wrap: wrap; gap: 15px; }
+    .order-id { font-weight: 700; font-size: 16px; }
+    .order-id i { color: var(--accent-cyan); margin-right: 8px; }
+    .order-date { font-size: 13px; color: var(--text-muted); }
+    .order-date i { margin-right: 6px; }
+    .order-status { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 30px; font-size: 12px; font-weight: 600; }
+    .status-delivered { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .status-processing { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .status-shipped { background: rgba(0,212,255,0.15); color: #00d4ff; }
+    .order-body { padding: 20px 24px; }
+    .order-items { display: flex; flex-direction: column; gap: 12px; }
+    .order-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-subtle); flex-wrap: wrap; gap: 10px; }
+    .order-item:last-child { border-bottom: none; }
+    .order-item-info { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+    .order-item-img { width: 50px; height: 50px; border-radius: 8px; overflow: hidden; background: #1a1f2e; }
+    .order-item-img img { width: 100%; height: 100%; object-fit: cover; }
+    .order-item-name { font-weight: 500; font-size: 14px; }
+    .order-item-qty { font-size: 13px; color: var(--text-muted); }
+    .order-item-price { font-weight: 600; color: var(--accent-cyan); }
+    .order-footer { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-top: 1px solid var(--border-subtle); background: rgba(0,0,0,0.2); flex-wrap: wrap; gap: 15px; }
+    .order-total { font-size: 18px; font-weight: 700; }
+    .order-total span { color: var(--accent-cyan); }
+    .btn-reorder { background: transparent; border: 1px solid var(--accent-cyan); color: var(--accent-cyan); padding: 8px 20px; border-radius: 30px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-reorder:hover { background: var(--accent-cyan); color: #000; }
 
-    .btn-reorder {
-      background: transparent;
-      border: 1px solid var(--accent-cyan);
-      color: var(--accent-cyan);
-      padding: 8px 20px;
-      border-radius: 30px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-reorder:hover {
-      background: var(--accent-cyan);
-      color: #000;
-    }
-
-    /* Footer */
+    /* ===== PROFESSIONAL FOOTER ===== */
     .footer {
-      background: rgba(13, 19, 32, 0.95);
+      background: #0d1320;
       border-top: 1px solid var(--border-subtle);
-      padding: 48px 0 24px;
+      padding: 60px 0 24px;
       margin-top: 60px;
     }
-
     .footer-grid {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr 1.5fr;
       gap: 48px;
       margin-bottom: 40px;
     }
-
+    .footer-brand p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-top: 12px;
+      line-height: 1.7;
+    }
+    .footer-social {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .footer-social a {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .footer-social a:hover {
+      background: var(--accent-cyan);
+      color: #000;
+      border-color: var(--accent-cyan);
+    }
+    .footer-column h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+    .footer-column ul {
+      list-style: none;
+    }
+    .footer-column li {
+      margin-bottom: 10px;
+    }
+    .footer-column a {
+      color: var(--text-secondary);
+      font-size: 14px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-column a:hover {
+      color: var(--accent-cyan);
+    }
     .footer-bottom {
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 24px;
       text-align: center;
       color: var(--text-muted);
       font-size: 13px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border-subtle);
     }
 
     @media (max-width: 968px) {
-      .nav-links {
-        display: none;
-      }
-      .footer-grid {
-        grid-template-columns: 1fr 1fr;
-      }
+      .nav-links { display: none; }
+      .menu-toggle { display: block; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
     }
-
     @media (max-width: 640px) {
-      .orders-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .order-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .order-footer {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .footer-grid {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
+      .orders-header { flex-direction: column; align-items: flex-start; }
+      .order-header { flex-direction: column; align-items: flex-start; }
+      .order-footer { flex-direction: column; align-items: flex-start; }
+      .footer-grid { grid-template-columns: 1fr; text-align: center; }
+      .footer-social { justify-content: center; }
+      .floating-cart { width: 50px; height: 50px; bottom: 20px; right: 20px; }
+      .floating-cart svg { width: 24px; height: 24px; }
     }
   </style>
 </head>
@@ -433,26 +224,43 @@
       <a href="index.html" class="nav-logo">Zeetech</a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="index.html#products">Products</a></li>
-        <li><a href="index.html#categories">Categories</a></li>
+        <li><a href="products.html">Products</a></li>
         <li><a href="orders.html" class="active">My Orders</a></li>
+        <li><a href="index.html#services">Services</a></li>
         <li><a href="index.html#contact">Contact</a></li>
       </ul>
       <div class="nav-actions">
-        <a href="cart.html" class="nav-cart">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-          </svg>
-          <span class="cart-badge" id="cartBadge">0</span>
-        </a>
         <div style="display: flex; align-items: center; gap: 10px;">
           <span id="userNameDisplay" style="color: #00d4ff; font-weight: 500;"></span>
           <a href="login.html" class="btn btn-primary" id="authBtn"><i class="fas fa-sign-in-alt"></i> Sign In</a>
         </div>
       </div>
+      <button class="menu-toggle" id="menuToggle">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
+
+  <!-- Mobile Navigation Menu -->
+  <div class="mobile-nav" id="mobileNav">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="orders.html">My Orders</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+  <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+
+  <!-- Floating Cart Button -->
+  <a href="cart.html" class="floating-cart" id="floatingCart">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+    </svg>
+    <span class="cart-badge" id="floatingCartBadge">0</span>
+  </a>
 
   <!-- ORDERS PAGE -->
   <section class="orders-page">
@@ -461,50 +269,67 @@
         <h1><i class="fas fa-box"></i> My Orders</h1>
         <div class="orders-count" id="ordersCount">0 Orders</div>
       </div>
-      
-      <div id="ordersContainer">
-        <!-- Orders will be loaded here -->
-      </div>
+      <div id="ordersContainer"></div>
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="footer">
+  <!-- PROFESSIONAL FOOTER -->
+  <footer class="footer" id="contact">
     <div class="container">
       <div class="footer-grid">
-        <div>
-          <h3><i class="fas fa-microchip"></i> Zeetech</h3>
-          <p style="color:var(--text-secondary); margin-top:12px;">Premium home electronics for the modern home.</p>
+        <div class="footer-brand">
+          <h3 class="nav-logo">Zeetech</h3>
+          <p>Premium home electronics for the modern home. Quality products at best prices.</p>
+          <div class="footer-social">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
         </div>
-        <div>
+        <div class="footer-column">
           <h4>Quick Links</h4>
-          <ul style="list-style:none;">
-            <li><a href="index.html" style="color:var(--text-secondary); text-decoration:none;">Home</a></li>
-            <li><a href="orders.html" style="color:var(--text-secondary); text-decoration:none;">My Orders</a></li>
-            <li><a href="cart.html" style="color:var(--text-secondary); text-decoration:none;">Cart</a></li>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="cart.html">Cart</a></li>
+            <li><a href="orders.html">My Orders</a></li>
           </ul>
         </div>
-        <div>
+        <div class="footer-column">
           <h4>Support</h4>
-          <ul style="list-style:none;">
-            <li><a href="#" style="color:var(--text-secondary); text-decoration:none;">Contact Us</a></li>
-            <li><a href="#" style="color:var(--text-secondary); text-decoration:none;">FAQs</a></li>
+          <ul>
+            <li><a href="#">Warranty</a></li>
+            <li><a href="#">Returns</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">FAQs</a></li>
           </ul>
         </div>
-        <div>
+        <div class="footer-column">
           <h4>Contact Info</h4>
-          <ul style="list-style:none;">
+          <ul>
             <li><i class="fas fa-map-marker-alt"></i> Karachi, Pakistan</li>
             <li><i class="fas fa-envelope"></i> support@zeetech.pk</li>
             <li><i class="fas fa-phone"></i> +92 300 1234567</li>
           </ul>
         </div>
       </div>
-      <div class="footer-bottom">&copy; 2024 Zeetech. All rights reserved.</div>
+      <div class="footer-bottom">
+        &copy; 2024 Zeetech. All rights reserved.
+      </div>
     </div>
   </footer>
 
   <script>
+    // ===== MOBILE MENU =====
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+    function toggleMobileMenu() { menuToggle.classList.toggle('active'); mobileNav.classList.toggle('active'); mobileNavOverlay.classList.toggle('active'); document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : ''; }
+    function closeMobileMenu() { menuToggle.classList.remove('active'); mobileNav.classList.remove('active'); mobileNavOverlay.classList.remove('active'); document.body.style.overflow = ''; }
+    menuToggle.addEventListener('click', toggleMobileMenu);
+    mobileNavOverlay.addEventListener('click', closeMobileMenu);
+    document.querySelectorAll('.mobile-nav a').forEach(link => { link.addEventListener('click', closeMobileMenu); });
+
     // ===== USER PROFILE =====
     function updateUserProfile() {
       const loggedInUser = JSON.parse(localStorage.getItem('zeetech_logged_in'));
@@ -513,34 +338,32 @@
       if (loggedInUser && loggedInUser.isLoggedIn) {
         userNameSpan.innerHTML = `<i class="fas fa-user-circle"></i> ${loggedInUser.name}`;
         authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
-        authBtn.href = '#';
-        authBtn.onclick = function(e) {
-          e.preventDefault();
-          localStorage.removeItem('zeetech_logged_in');
-          showToast('Logged out successfully!');
-          setTimeout(() => window.location.href = 'index.html', 1500);
-        };
+        authBtn.onclick = function(e) { e.preventDefault(); localStorage.removeItem('zeetech_logged_in'); showToast('Logged out successfully!'); setTimeout(() => window.location.reload(), 1500); };
       } else {
         userNameSpan.innerHTML = '';
         authBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
         authBtn.href = 'login.html';
-        authBtn.onclick = null;
       }
     }
     updateUserProfile();
 
-    // Update cart badge
+    // ===== CART =====
     function updateCartBadge() {
       const cart = JSON.parse(localStorage.getItem('zeetech_cart')) || [];
-      const badge = document.getElementById('cartBadge');
-      if (badge) {
-        const total = cart.reduce((sum, item) => sum + item.qty, 0);
-        badge.textContent = total;
-      }
+      const total = cart.reduce((sum, item) => sum + item.qty, 0);
+      const floatingBadge = document.getElementById('floatingCartBadge');
+      if(floatingBadge) floatingBadge.textContent = total;
     }
     updateCartBadge();
 
-    // Load orders from localStorage
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.textContent = message;
+      toast.style.cssText = `position:fixed; bottom:24px; right:24px; background:linear-gradient(135deg,#00d4ff,#0099cc); color:#000; padding:12px 20px; border-radius:12px; font-weight:600; font-size:14px; z-index:10000; animation:slideIn 0.3s ease;`;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2500);
+    }
+
     function loadOrders() {
       const orders = JSON.parse(localStorage.getItem('zeetech_orders')) || [];
       const container = document.getElementById('ordersContainer');
@@ -549,124 +372,46 @@
       ordersCountSpan.textContent = `${orders.length} Order${orders.length !== 1 ? 's' : ''}`;
       
       if (orders.length === 0) {
-        container.innerHTML = `
-          <div class="no-orders">
-            <i class="fas fa-shopping-bag"></i>
-            <h3>No Orders Yet</h3>
-            <p>You haven't placed any orders yet. Start shopping to see your orders here!</p>
-            <a href="index.html#products" class="btn btn-primary"><i class="fas fa-shop"></i> Start Shopping</a>
-          </div>
-        `;
+        container.innerHTML = `<div class="no-orders"><i class="fas fa-shopping-bag"></i><h3>No Orders Yet</h3><p>You haven't placed any orders yet. Start shopping to see your orders here!</p><a href="index.html#products" class="btn btn-primary"><i class="fas fa-shop"></i> Start Shopping</a></div>`;
         return;
       }
       
-      // Sort orders by date (newest first)
       orders.sort((a, b) => new Date(b.date) - new Date(a.date));
       
       container.innerHTML = orders.map(order => `
         <div class="order-card">
           <div class="order-header">
-            <div>
-              <div class="order-id"><i class="fas fa-hashtag"></i> ${order.orderId}</div>
-              <div class="order-date"><i class="far fa-calendar-alt"></i> ${order.date}</div>
-            </div>
-            <div class="order-status ${getStatusClass(order.status)}">
-              <i class="fas ${getStatusIcon(order.status)}"></i> ${order.status}
+            <div><div class="order-id"><i class="fas fa-hashtag"></i> ${order.orderId}</div><div class="order-date"><i class="far fa-calendar-alt"></i> ${order.date}</div></div>
+            <div class="order-status ${order.status === 'Delivered' ? 'status-delivered' : (order.status === 'Processing' ? 'status-processing' : 'status-shipped')}">
+              <i class="fas ${order.status === 'Delivered' ? 'fa-check-circle' : (order.status === 'Processing' ? 'fa-spinner fa-pulse' : 'fa-truck')}"></i> ${order.status}
             </div>
           </div>
-          <div class="order-body">
-            <div class="order-items">
-              ${order.items.map(item => `
-                <div class="order-item">
-                  <div class="order-item-info">
-                    <div class="order-item-img">
-                      <img src="${item.image || 'https://images.unsplash.com/photo-1571175443880-49e1d58b2c63?w=100&h=100&fit=crop'}" alt="${item.name}">
-                    </div>
-                    <div>
-                      <div class="order-item-name">${item.name}</div>
-                      <div class="order-item-qty">Quantity: ${item.qty}</div>
-                    </div>
-                  </div>
-                  <div class="order-item-price">Rs. ${(item.price * item.qty).toLocaleString()}</div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-          <div class="order-footer">
-            <div class="order-total">Total: <span>Rs. ${order.total.toLocaleString()}</span></div>
-            <button class="btn-reorder" onclick="reorder('${order.orderId}')"><i class="fas fa-redo-alt"></i> Reorder</button>
-          </div>
+          <div class="order-body"><div class="order-items">${order.items.map(item => `<div class="order-item"><div class="order-item-info"><div class="order-item-img"><img src="${item.image || 'https://images.unsplash.com/photo-1571175443880-49e1d58b2c63?w=100&h=100&fit=crop'}"></div><div><div class="order-item-name">${item.name}</div><div class="order-item-qty">Quantity: ${item.qty}</div></div></div><div class="order-item-price">Rs. ${(item.price * item.qty).toLocaleString()}</div></div>`).join('')}</div></div>
+          <div class="order-footer"><div class="order-total">Total: <span>Rs. ${order.total.toLocaleString()}</span></div><button class="btn-reorder" onclick="reorder('${order.orderId}')"><i class="fas fa-redo-alt"></i> Reorder</button></div>
         </div>
       `).join('');
     }
-    
-    function getStatusClass(status) {
-      if (status === 'Delivered') return 'status-delivered';
-      if (status === 'Processing') return 'status-processing';
-      return 'status-shipped';
-    }
-    
-    function getStatusIcon(status) {
-      if (status === 'Delivered') return 'fa-check-circle';
-      if (status === 'Processing') return 'fa-spinner fa-pulse';
-      return 'fa-truck';
-    }
-    
-    // Reorder function
+
     function reorder(orderId) {
       const orders = JSON.parse(localStorage.getItem('zeetech_orders')) || [];
       const order = orders.find(o => o.orderId === orderId);
-      
       if (order) {
         let cart = JSON.parse(localStorage.getItem('zeetech_cart')) || [];
-        
         order.items.forEach(item => {
           const existing = cart.find(c => c.id === item.id);
-          if (existing) {
-            existing.qty += item.qty;
-          } else {
-            cart.push({ ...item });
-          }
+          existing ? existing.qty += item.qty : cart.push({ ...item });
         });
-        
         localStorage.setItem('zeetech_cart', JSON.stringify(cart));
         updateCartBadge();
         showToast('Items added to cart!');
         setTimeout(() => window.location.href = 'cart.html', 1000);
       }
     }
-    
-    function showToast(message) {
-      const toast = document.createElement('div');
-      toast.textContent = message;
-      toast.style.cssText = `
-        position: fixed;
-        bottom: 24px;
-        right: 24px;
-        background: linear-gradient(135deg, #00d4ff, #0099cc);
-        color: #000;
-        padding: 12px 20px;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 14px;
-        z-index: 10000;
-        animation: slideIn 0.3s ease;
-      `;
-      document.body.appendChild(toast);
-      setTimeout(() => toast.remove(), 2500);
-    }
-    
-    // Add animation style
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes slideIn {
-        from { transform: translateX(100px); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-      }
-    `;
-    document.head.appendChild(style);
-    
-    // Load orders on page load
+
+    const s = document.createElement('style');
+    s.textContent = '@keyframes slideIn{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}';
+    document.head.appendChild(s);
+
     loadOrders();
   </script>
 </body>
