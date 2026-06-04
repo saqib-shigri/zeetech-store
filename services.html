@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Our Services - Zeetech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --accent-cyan: #00d4ff;
+      --text-primary: #ffffff;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border-subtle: rgba(255,255,255,0.06);
+      --border-medium: rgba(255,255,255,0.1);
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --radius-full: 9999px;
+    }
+    body { font-family: 'Inter', sans-serif; background: #080c14; color: var(--text-primary); line-height: 1.6; overflow-x: hidden; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    /* ===== NAVBAR (Same as index.html) ===== */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; background: rgba(8,12,20,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-subtle); z-index: 1000; }
+    .navbar-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .nav-logo { font-size: 22px; font-weight: 800; color: var(--text-primary); text-decoration: none; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text-primary); }
+    .menu-toggle { display: none; background: transparent; border: none; cursor: pointer; padding: 10px; z-index: 1001; }
+    .menu-toggle span { display: block; width: 25px; height: 2px; background: var(--text-primary); margin: 5px 0; transition: 0.3s; }
+    .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+    .menu-toggle.active span:nth-child(2) { opacity: 0; }
+    .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(7px,-6px); }
+    .mobile-nav { position: fixed; top: 72px; left: -100%; width: 80%; max-width: 300px; height: calc(100vh - 72px); background: rgba(8,12,20,0.98); backdrop-filter: blur(20px); border-right: 1px solid var(--border-subtle); transition: left 0.3s ease; z-index: 999; padding: 30px 20px; display: flex; flex-direction: column; }
+    .mobile-nav.active { left: 0; }
+    .mobile-nav ul { list-style: none; flex: 1; }
+    .mobile-nav li { margin-bottom: 20px; }
+    .mobile-nav a { color: var(--text-secondary); text-decoration: none; font-size: 16px; font-weight: 500; display: block; padding: 8px 0; }
+    .mobile-nav a:hover { color: var(--accent-cyan); }
+    .mobile-user-info { padding: 20px 0; margin-bottom: 20px; border-bottom: 1px solid var(--border-subtle); text-align: center; }
+    .mobile-user-avatar { width: 60px; height: 60px; background: linear-gradient(135deg, #00d4ff, #0099cc); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+    .mobile-user-avatar i { font-size: 30px; color: #000; }
+    .mobile-user-name { font-size: 16px; font-weight: 600; }
+    .mobile-user-email { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+    .mobile-logout-btn { background: rgba(239,68,68,0.1); border: 1px solid var(--danger); color: var(--danger); padding: 12px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; cursor: pointer; width: 100%; text-align: center; margin-top: 20px; }
+    .mobile-login-btn { background: linear-gradient(135deg, #00d4ff, #0099cc); color: #000; padding: 12px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; width: 100%; text-align: center; display: block; text-decoration: none; }
+    .mobile-nav-overlay { position: fixed; top: 72px; left: 0; width: 100%; height: calc(100vh - 72px); background: rgba(0,0,0,0.5); z-index: 998; opacity: 0; visibility: hidden; transition: 0.3s; }
+    .mobile-nav-overlay.active { opacity: 1; visibility: visible; }
+    .desktop-user-actions { display: flex; align-items: center; gap: 16px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 24px; font-size: 14px; font-weight: 600; border-radius: var(--radius-full); text-decoration: none; cursor: pointer; transition: all 0.2s; border: none; }
+    .btn-primary { background: linear-gradient(135deg, #00d4ff, #0099cc); color: #000; }
+    .floating-cart { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(135deg, #00d4ff, #0099cc); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 999; cursor: pointer; box-shadow: 0 4px 15px rgba(0,212,255,0.4); transition: all 0.3s; text-decoration: none; }
+    .floating-cart:hover { transform: scale(1.1); }
+    .floating-cart svg { width: 28px; height: 28px; color: #000; }
+    .floating-cart .cart-badge { position: absolute; top: -5px; right: -5px; background: #ff4444; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+
+    /* Services Page Specific */
+    .services-page { padding: 120px 0 80px; min-height: 100vh; }
+    .page-header { text-align: center; margin-bottom: 50px; }
+    .page-header h1 { font-size: 42px; font-weight: 800; margin-bottom: 15px; }
+    .page-header h1 span { color: var(--accent-cyan); }
+    .page-header p { color: var(--text-secondary); font-size: 16px; max-width: 600px; margin: 0 auto; }
+    .services-full-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; max-width: 1000px; margin: 0 auto; }
+    .service-full-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 40px 30px; transition: all 0.4s ease; text-align: center; }
+    .service-full-card:hover { transform: translateY(-8px); border-color: var(--accent-cyan); box-shadow: 0 20px 40px rgba(0,212,255,0.15); }
+    .service-full-icon { font-size: 60px; margin-bottom: 25px; color: var(--accent-cyan); }
+    .service-full-card h3 { font-size: 24px; font-weight: 700; margin-bottom: 15px; }
+    .service-full-card p { color: var(--text-secondary); font-size: 15px; line-height: 1.7; margin-bottom: 20px; }
+    .service-full-features { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 20px 0; }
+    .service-full-features span { background: rgba(0,212,255,0.1); color: var(--accent-cyan); padding: 6px 15px; border-radius: 30px; font-size: 12px; }
+    .service-full-btn { background: linear-gradient(135deg, #00d4ff, #0099cc); color: #000; border: none; padding: 14px 30px; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s; width: 100%; }
+    .service-full-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,212,255,0.3); }
+
+    .footer { background: #0d1320; border-top: 1px solid var(--border-subtle); padding: 60px 0 24px; margin-top: 60px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 48px; margin-bottom: 40px; }
+    .footer-bottom { text-align: center; color: var(--text-muted); font-size: 13px; padding-top: 24px; border-top: 1px solid var(--border-subtle); }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .menu-toggle { display: block; }
+      .desktop-user-actions { display: none !important; }
+      .services-full-list { grid-template-columns: 1fr; }
+      .page-header h1 { font-size: 32px; }
+      .footer-grid { grid-template-columns: 1fr; text-align: center; }
+      .floating-cart { width: 50px; height: 50px; bottom: 20px; right: 20px; }
+      .floating-cart svg { width: 24px; height: 24px; }
+    }
+    @media (max-width: 480px) {
+      .service-full-card { padding: 30px 20px; }
+      .service-full-icon { font-size: 48px; }
+      .service-full-card h3 { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <a href="index.html" class="nav-logo">Zeetech</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="services.html" class="active">Services</a></li>
+        <li><a href="orders.html">My Orders</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+      <div class="desktop-user-actions">
+        <span id="userNameDisplay" style="color: #00d4ff; font-weight: 500;"></span>
+        <a href="login.html" class="btn btn-primary" id="authBtn"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+      </div>
+      <button class="menu-toggle" id="menuToggle">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Navigation -->
+  <div class="mobile-nav" id="mobileNav">
+    <div id="mobileUserSection"></div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="orders.html">My Orders</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+  <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+
+  <!-- Floating Cart -->
+  <a href="cart.html" class="floating-cart" id="floatingCart">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+    </svg>
+    <span class="cart-badge" id="floatingCartBadge">0</span>
+  </a>
+
+  <!-- SERVICES PAGE -->
+  <section class="services-page">
+    <div class="container">
+      <div class="page-header">
+        <h1>Our <span>Premium Services</span></h1>
+        <p>Professional installation and maintenance services for all your home electronics needs</p>
+      </div>
+      <div class="services-full-list">
+        <div class="service-full-card">
+          <div class="service-full-icon"><i class="fas fa-video"></i></div>
+          <h3>CCTV Installation</h3>
+          <p>Professional CCTV installation services to secure your home and business premises. Our experts ensure optimal camera placement for maximum coverage.</p>
+          <div class="service-full-features">
+            <span><i class="fas fa-clock"></i> 24/7 Monitoring</span>
+            <span><i class="fas fa-hd"></i> HD Quality</span>
+            <span><i class="fas fa-users"></i> Expert Team</span>
+            <span><i class="fas fa-cloud"></i> Cloud Storage</span>
+          </div>
+          <button class="service-full-btn" onclick="showToast('CCTV Installation booking initiated!')">Book Now <i class="fas fa-arrow-right"></i></button>
+        </div>
+        <div class="service-full-card">
+          <div class="service-full-icon"><i class="fas fa-wind"></i></div>
+          <h3>AC Installation & Maintenance</h3>
+          <p>Expert AC installation and maintenance services to keep your cooling systems running efficiently all year round.</p>
+          <div class="service-full-features">
+            <span><i class="fas fa-stethoscope"></i> Free Checkup</span>
+            <span><i class="fas fa-shield-alt"></i> 1 Year Warranty</span>
+            <span><i class="fas fa-bolt"></i> Quick Service</span>
+            <span><i class="fas fa-gas-pump"></i> Gas Refill</span>
+          </div>
+          <button class="service-full-btn" onclick="showToast('AC Service booking initiated!')">Book Now <i class="fas fa-arrow-right"></i></button>
+        </div>
+        <div class="service-full-card">
+          <div class="service-full-icon"><i class="fas fa-temperature-low"></i></div>
+          <h3>Refrigerator Repair</h3>
+          <p>Reliable refrigerator repair services to fix any issues and restore your appliance's performance with genuine parts.</p>
+          <div class="service-full-features">
+            <span><i class="fas fa-calendar-day"></i> Same Day Service</span>
+            <span><i class="fas fa-cogs"></i> Genuine Parts</span>
+            <span><i class="fas fa-check-circle"></i> 30 Days Warranty</span>
+            <span><i class="fas fa-tools"></i> Free Diagnosis</span>
+          </div>
+          <button class="service-full-btn" onclick="showToast('Refrigerator repair booking initiated!')">Book Now <i class="fas fa-arrow-right"></i></button>
+        </div>
+        <div class="service-full-card">
+          <div class="service-full-icon"><i class="fas fa-mobile-alt"></i></div>
+          <h3>Home Electronics Consultation</h3>
+          <p>Personalized consultation to help you choose the best products for your needs and set up your smart home.</p>
+          <div class="service-full-features">
+            <span><i class="fas fa-comment-dots"></i> Free Consultation</span>
+            <span><i class="fas fa-chalkboard-teacher"></i> Expert Advice</span>
+            <span><i class="fas fa-tools"></i> Custom Solutions</span>
+            <span><i class="fas fa-home"></i> On-site Visit</span>
+          </div>
+          <button class="service-full-btn" onclick="showToast('Consultation booking initiated!')">Book Now <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><h3><i class="fas fa-microchip"></i> Zeetech</h3><p style="color:var(--text-secondary); margin-top:12px;">Premium home electronics for the modern home.</p></div>
+        <div><h4>Quick Links</h4><ul style="list-style:none;"><li><a href="index.html" style="color:var(--text-secondary);">Home</a></li><li><a href="products.html" style="color:var(--text-secondary);">Products</a></li><li><a href="services.html" style="color:var(--text-secondary);">Services</a></li><li><a href="orders.html" style="color:var(--text-secondary);">My Orders</a></li></ul></div>
+        <div><h4>Support</h4><ul style="list-style:none;"><li><a href="#" style="color:var(--text-secondary);">Contact Us</a></li><li><a href="#" style="color:var(--text-secondary);">FAQs</a></li></ul></div>
+        <div><h4>Contact Info</h4><ul style="list-style:none;"><li><i class="fas fa-map-marker-alt"></i> Karachi, Pakistan</li><li><i class="fas fa-envelope"></i> support@zeetech.pk</li><li><i class="fas fa-phone"></i> +92 300 1234567</li></ul></div>
+      </div>
+      <div class="footer-bottom">&copy; 2024 Zeetech. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile Menu
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+    function toggleMobileMenu() { menuToggle.classList.toggle('active'); mobileNav.classList.toggle('active'); mobileNavOverlay.classList.toggle('active'); document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : ''; }
+    function closeMobileMenu() { menuToggle.classList.remove('active'); mobileNav.classList.remove('active'); mobileNavOverlay.classList.remove('active'); document.body.style.overflow = ''; }
+    menuToggle.addEventListener('click', toggleMobileMenu);
+    mobileNavOverlay.addEventListener('click', closeMobileMenu);
+    document.querySelectorAll('.mobile-nav a').forEach(link => { link.addEventListener('click', closeMobileMenu); });
+
+    // User Profile
+    function updateMobileUserSection() {
+      const loggedInUser = JSON.parse(localStorage.getItem('zeetech_logged_in'));
+      const mobileUserSection = document.getElementById('mobileUserSection');
+      if (loggedInUser && loggedInUser.isLoggedIn) {
+        mobileUserSection.innerHTML = `<div class="mobile-user-info"><div class="mobile-user-avatar"><i class="fas fa-user-circle"></i></div><div class="mobile-user-name">${loggedInUser.name}</div><div class="mobile-user-email">${loggedInUser.email}</div><button class="mobile-logout-btn" id="mobileLogoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button></div>`;
+        document.getElementById('mobileLogoutBtn')?.addEventListener('click', function(e) { e.preventDefault(); localStorage.removeItem('zeetech_logged_in'); showToast('Logged out successfully!'); closeMobileMenu(); setTimeout(() => window.location.reload(), 1000); });
+      } else {
+        mobileUserSection.innerHTML = `<div class="mobile-user-info"><div class="mobile-user-avatar"><i class="fas fa-user-circle"></i></div><div class="mobile-user-name">Guest User</div><div class="mobile-user-email">Please sign in to continue</div><a href="login.html" class="mobile-login-btn"><i class="fas fa-sign-in-alt"></i> Sign In</a></div>`;
+      }
+    }
+    function updateDesktopUserProfile() {
+      const loggedInUser = JSON.parse(localStorage.getItem('zeetech_logged_in'));
+      const userNameSpan = document.getElementById('userNameDisplay');
+      const authBtn = document.getElementById('authBtn');
+      if (loggedInUser && loggedInUser.isLoggedIn) {
+        userNameSpan.innerHTML = `<i class="fas fa-user-circle"></i> ${loggedInUser.name}`;
+        authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+        authBtn.removeAttribute('href');
+        authBtn.onclick = function(e) { e.preventDefault(); localStorage.removeItem('zeetech_logged_in'); showToast('Logged out successfully!'); setTimeout(() => window.location.reload(), 1000); };
+      } else {
+        userNameSpan.innerHTML = '';
+        authBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+        authBtn.href = 'login.html';
+      }
+    }
+    function updateCartBadge() { const cart = JSON.parse(localStorage.getItem('zeetech_cart')) || []; const total = cart.reduce((s,i)=>s+i.qty,0); const fb = document.getElementById('floatingCartBadge'); if(fb) fb.textContent = total; }
+    function showToast(msg) { const t=document.createElement('div'); t.textContent=msg; t.style.cssText=`position:fixed; bottom:24px; right:24px; background:linear-gradient(135deg,#00d4ff,#0099cc); color:#000; padding:14px 24px; border-radius:12px; font-weight:600; z-index:10000; animation:slideIn 0.3s ease;`; document.body.appendChild(t); setTimeout(()=>t.remove(),2500); }
+    const s = document.createElement('style'); s.textContent='@keyframes slideIn{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}'; document.head.appendChild(s);
+    updateDesktopUserProfile(); updateMobileUserSection(); updateCartBadge();
+  </script>
+</body>
+</html>
