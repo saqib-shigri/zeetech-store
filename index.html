@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Zeetech - Home Electronics Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --accent-cyan: #00d4ff;
+      --text-primary: #ffffff;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border-subtle: rgba(255,255,255,0.06);
+      --border-medium: rgba(255,255,255,0.1);
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --radius-full: 9999px;
+    }
+    body { font-family: 'Inter', sans-serif; background: #080c14; color: var(--text-primary); line-height: 1.6; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    /* ===== NAVBAR ===== */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; background: rgba(8,12,20,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-subtle); z-index: 1000; }
+    .navbar-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .nav-logo { font-size: 22px; font-weight: 800; color: var(--text-primary); text-decoration: none; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text-primary); }
+    .nav-actions { display: flex; align-items: center; gap: 16px; }
+    .nav-cart { position: relative; color: var(--text-secondary); text-decoration: none; }
+    .cart-badge { position: absolute; top: -8px; right: -12px; width: 18px; height: 18px; background: var(--accent-cyan); color: #000; font-size: 10px; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 24px; font-size: 14px; font-weight: 600; border-radius: var(--radius-full); text-decoration: none; cursor: pointer; transition: all 0.2s; border: none; }
+    .btn-primary { background: linear-gradient(135deg, #00d4ff, #0099cc); color: #000; }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,212,255,0.4); }
+    .btn-secondary { background: transparent; color: var(--text-primary); border: 1px solid var(--border-medium); }
+    .btn-secondary:hover { background: rgba(255,255,255,0.05); }
+    .btn-lg { padding: 14px 32px; font-size: 16px; }
+    .btn-outline { background: transparent; border: 1px solid var(--accent-cyan); color: var(--accent-cyan); }
+    .btn-outline:hover { background: var(--accent-cyan); color: #000; }
+
+    /* ===== HERO SECTION ===== */
+    .hero { margin-top: 72px; position: relative; width: 100%; height: 80vh; min-height: 500px; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; }
+    .hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+    .hero-bg img { width: 100%; height: 100%; object-fit: cover; }
+    .hero-bg .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 100%); }
+    .hero-content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: 0 24px; }
+    .hero-title { font-size: 56px; font-weight: 800; line-height: 1.1; margin-bottom: 20px; }
+    .hero-title span { color: var(--accent-cyan); }
+    .hero-desc { color: #cbd5e1; font-size: 18px; margin-bottom: 32px; }
+    .hero-actions { display: flex; gap: 16px; justify-content: center; }
+
+    /* ===== DISCOUNT BANNER ===== */
+    .discount-section { padding: 40px 0; background: linear-gradient(135deg, #0a0f1a 0%, #0d1520 100%); border-bottom: 1px solid var(--border-subtle); overflow: hidden; }
+    .discount-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 15px; }
+    .discount-header h2 { font-size: 24px; font-weight: 700; color: #ff6b35; }
+    .discount-header h2 span { background: #ff0000; padding: 4px 12px; border-radius: 50px; font-size: 14px; margin-left: 10px; }
+    .scroll-controls { display: flex; gap: 10px; }
+    .scroll-controls button { background: var(--accent-cyan); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; color: #000; font-weight: bold; font-size: 18px; transition: all 0.3s; }
+    .scroll-controls button:hover { transform: scale(1.1); background: #ff6b35; color: white; }
+    .marquee-container { width: 100%; overflow: hidden; }
+    .marquee-content { display: flex; gap: 20px; animation: marqueeScroll 25s linear infinite; width: fit-content; }
+    .marquee-content:hover { animation-play-state: paused; }
+    @keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .discount-card { width: 280px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); overflow: hidden; transition: all 0.3s; flex-shrink: 0; }
+    .discount-card:hover { transform: translateY(-5px); border-color: #ff6b35; box-shadow: 0 10px 30px rgba(255,107,53,0.2); }
+    .discount-image { position: relative; height: 180px; overflow: hidden; background: #1a1f2e; }
+    .discount-image img { width: 100%; height: 100%; object-fit: cover; }
+    .discount-badge { position: absolute; top: 10px; right: 10px; background: #ff0000; color: white; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+    .discount-info { padding: 15px; }
+    .discount-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; line-height: 1.4; height: 40px; overflow: hidden; }
+    .discount-price-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .current-price { font-size: 18px; font-weight: 700; color: #ff6b35; }
+    .old-price { font-size: 13px; text-decoration: line-through; color: var(--text-muted); }
+    .discount-percent { font-size: 12px; color: #00ff88; }
+    .btn-discount-cart { width: 100%; padding: 10px; background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; border: none; border-radius: var(--radius-full); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-discount-cart:hover { transform: scale(1.02); box-shadow: 0 4px 15px rgba(255,107,53,0.4); }
+
+    /* ===== SEARCH BAR ===== */
+    .search-section { padding: 30px 0 0 0; background: #080c14; }
+    .search-container { max-width: 600px; margin: 0 auto; }
+    .search-box { display: flex; background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle); border-radius: 50px; overflow: hidden; transition: all 0.3s; }
+    .search-box:focus-within { border-color: var(--accent-cyan); box-shadow: 0 0 0 2px rgba(0,212,255,0.1); }
+    .search-box input { flex: 1; background: transparent; border: none; padding: 14px 20px; color: var(--text-primary); font-size: 15px; outline: none; }
+    .search-box input::placeholder { color: var(--text-muted); }
+    .search-box button { background: var(--accent-cyan); border: none; padding: 0 25px; cursor: pointer; color: #000; font-size: 18px; transition: all 0.3s; }
+    .search-box button:hover { background: #0099cc; }
+    .search-results-info { text-align: center; margin-top: 15px; font-size: 14px; color: var(--text-secondary); }
+
+    /* ===== FEATURED PRODUCTS ===== */
+    .featured-section { padding: 60px 0; background: #080c14; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 15px; }
+    .section-title { font-size: 32px; font-weight: 700; }
+    .featured-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .product-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); overflow: hidden; transition: all 0.3s; }
+    .product-card:hover { background: rgba(255,255,255,0.08); transform: translateY(-4px); }
+    .product-image { position: relative; height: 180px; overflow: hidden; background: #1a1f2e; }
+    .product-image img { width: 100%; height: 100%; object-fit: cover; }
+    .discount-tag { position: absolute; top: 10px; right: 10px; background: #ff4444; color: white; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 700; }
+    .product-info { padding: 20px; }
+    .product-title { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+    .product-price { font-size: 18px; font-weight: 700; color: var(--accent-cyan); }
+    .original-price { font-size: 12px; text-decoration: line-through; color: var(--text-muted); margin-left: 8px; }
+    .btn-add-cart { width: 100%; margin-top: 12px; padding: 10px; background: transparent; border: 1px solid var(--border-medium); border-radius: var(--radius-full); color: var(--text-primary); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-add-cart:hover { background: var(--accent-cyan); color: #000; }
+
+    /* ===== SERVICES ===== */
+    .services { padding: 80px 0; background: linear-gradient(135deg, #080c14 0%, #0a0f1a 100%); }
+    .services-header { text-align: center; margin-bottom: 50px; }
+    .services-title { font-size: 36px; font-weight: 800; margin-bottom: 12px; background: linear-gradient(135deg, #ffffff, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .services-title span { background: linear-gradient(135deg, #00d4ff, #ff6b35); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .services-subtitle { color: var(--text-secondary); font-size: 16px; max-width: 600px; margin: 0 auto; }
+    .service-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; max-width: 1200px; margin: 0 auto; }
+    .service-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 30px 24px; text-align: center; transition: all 0.4s ease; backdrop-filter: blur(10px); }
+    .service-card:hover { transform: translateY(-8px); border-color: var(--accent-cyan); box-shadow: 0 20px 40px rgba(0,212,255,0.15); }
+    .service-icon { font-size: 48px; margin-bottom: 20px; background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(255,107,53,0.1)); padding: 15px; border-radius: 60px; display: inline-block; transition: all 0.3s; }
+    .service-card:hover .service-icon { transform: scale(1.1) rotate(5deg); }
+    .service-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+    .service-card:hover h3 { color: var(--accent-cyan); }
+    .service-card p { color: var(--text-secondary); font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
+    .service-features { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px; }
+    .service-features span { background: rgba(0,212,255,0.1); color: var(--accent-cyan); font-size: 11px; padding: 5px 12px; border-radius: 20px; }
+    .service-btn { background: transparent; border: 1px solid var(--border-medium); color: var(--text-primary); padding: 12px 24px; border-radius: var(--radius-full); font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; transition: all 0.3s; }
+    .service-btn:hover { background: linear-gradient(135deg, #00d4ff, #0099cc); color: #000; transform: translateY(-2px); }
+
+    /* ===== ABOUT ===== */
+    .about-section { padding: 80px 0; background: linear-gradient(135deg, #080c14 0%, #0d1520 100%); }
+    .about-content { max-width: 800px; margin: 0 auto; text-align: center; }
+    .about-content h2 { font-size: 36px; font-weight: 800; margin-bottom: 20px; }
+    .about-content h2 span { color: var(--accent-cyan); }
+    .about-content p { color: var(--text-secondary); font-size: 16px; line-height: 1.7; margin-bottom: 25px; }
+    .about-stats { display: flex; gap: 30px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
+    .about-stat { text-align: center; }
+    .about-stat .number { font-size: 28px; font-weight: 800; color: var(--accent-cyan); }
+    .about-stat .label { font-size: 13px; color: var(--text-muted); }
+
+    /* ===== FOOTER ===== */
+    .footer { background: #0d1320; border-top: 1px solid var(--border-subtle); padding: 60px 0 24px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 48px; margin-bottom: 40px; }
+    .footer-brand p { color: var(--text-secondary); font-size: 14px; margin-top: 12px; }
+    .footer-social { display: flex; gap: 12px; margin-top: 16px; }
+    .footer-social a { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; color: var(--text-secondary); text-decoration: none; font-size: 16px; }
+    .footer-social a:hover { background: var(--accent-cyan); color: #000; }
+    .footer-column h4 { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+    .footer-column ul { list-style: none; }
+    .footer-column li { margin-bottom: 10px; }
+    .footer-column a { color: var(--text-secondary); font-size: 14px; text-decoration: none; }
+    .footer-column a:hover { color: var(--accent-cyan); }
+    .footer-bottom { border-top: 1px solid var(--border-subtle); padding-top: 24px; text-align: center; color: var(--text-muted); font-size: 13px; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1200px) { .featured-grid { grid-template-columns: repeat(3, 1fr); } .service-list { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 1024px) { .hero-title { font-size: 48px; } .featured-grid { grid-template-columns: repeat(2, 1fr); } .service-list { grid-template-columns: repeat(2, 1fr); } .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; } }
+    @media (max-width: 768px) { .nav-links { display: none; } .hero-title { font-size: 36px; } .featured-grid { grid-template-columns: repeat(2, 1fr); } .service-list { grid-template-columns: repeat(2, 1fr); } .footer-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .hero-title { font-size: 28px; } .hero-actions { flex-direction: column; align-items: center; gap: 10px; } .discount-header { flex-direction: column; align-items: flex-start; } .featured-grid { grid-template-columns: 1fr; } .service-list { grid-template-columns: 1fr; } .footer-grid { grid-template-columns: 1fr; text-align: center; } .services-title { font-size: 28px; } .section-title { font-size: 24px; } .search-box input { padding: 12px 16px; } .search-box button { padding: 0 18px; } }
+    @media (max-width: 768px) and (orientation: landscape) { .hero { height: 100vh; } .featured-grid { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <a href="index.html" class="nav-logo">Zeetech</a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="cart.html" class="nav-cart"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span class="cart-badge" id="cartBadge">0</span></a>
+        <div style="display: flex; align-items: center; gap: 10px;"><span id="userNameDisplay" style="color: #00d4ff; font-weight: 500;"></span><a href="login.html" class="btn btn-primary" id="authBtn">Sign In</a></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="home">
+    <div class="hero-bg"><img src="https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop" alt="Hero"><div class="overlay"></div></div>
+    <div class="hero-content"><h1 class="hero-title">Innovate Your <span>Sanctuary</span></h1><p class="hero-desc">Premium home electronics for modern living. Discover high-end ACs, Refrigerators, CCTV cameras and more at best prices!</p><div class="hero-actions"><a href="products.html" class="btn btn-primary btn-lg">Shop Now</a><a href="#services" class="btn btn-secondary btn-lg">Explore Services</a></div></div>
+  </section>
+
+  <!-- SEARCH BAR -->
+  <section class="search-section">
+    <div class="container">
+      <div class="search-container">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search products by name, brand, or category..." onkeyup="searchProducts()">
+          <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="search-results-info" id="searchResultsInfo"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section class="featured-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title"><i class="fas fa-star" style="color: #ffc107;"></i> Featured Products</h2>
+        <a href="products.html" class="btn btn-outline">View All Products <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="featured-grid" id="featuredGrid"></div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <div class="services" id="services">
+    <div class="container"><div class="services-header"><h2 class="services-title">Our <span>Premium Services</span></h2><p class="services-subtitle">Explore the range of professional services we offer</p></div>
+    <div class="service-list">
+      <div class="service-card"><div class="service-icon"><i class="fas fa-video"></i></div><h3>CCTV Installation</h3><p>Professional CCTV installation services to secure your home.</p><div class="service-features"><span>24/7 Monitoring</span><span>HD Quality</span><span>Expert Team</span></div><button class="service-btn" onclick="showToast('CCTV Installation booking initiated!')">Book Now <i class="fas fa-arrow-right"></i></button></div>
+      <div class="service-card"><div class="service-icon"><i class="fas fa-wind"></i></div><h3>AC Installation</h3><p>Expert AC installation and maintenance services.</p><div class="service-features"><span>Free Checkup</span><span>1 Year Warranty</span><span>Quick Service</span></div><button class="service-btn" onclick="showToast('AC Service booking initiated!')">Book Now <i class="fas fa-arrow-right"></i></button></div>
+      <div class="service-card"><div class="service-icon"><i class="fas fa-temperature-low"></i></div><h3>Refrigerator Repair</h3><p>Reliable refrigerator repair services.</p><div class="service-features"><span>Same Day Service</span><span>Genuine Parts</span><span>30 Days Warranty</span></div><button class="service-btn" onclick="showToast('Refrigerator repair booking initiated!')">Book Now <i class="fas fa-arrow-right"></i></button></div>
+      <div class="service-card"><div class="service-icon"><i class="fas fa-mobile-alt"></i></div><h3>Home Consultation</h3><p>Personalized consultation for your smart home.</p><div class="service-features"><span>Free Consultation</span><span>Expert Advice</span><span>Custom Solutions</span></div><button class="service-btn" onclick="showToast('Consultation booking initiated!')">Book Now <i class="fas fa-arrow-right"></i></button></div>
+    </div></div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="about-section" id="about">
+    <div class="container"><div class="about-content"><h2>About <span>Zeetech</span></h2><p>Zeetech is Pakistan's leading home electronics retailer, committed to bringing you the latest smart home solutions. Founded in 2018, we have grown to become a trusted name for quality electronics.</p><p>We offer premium products including air conditioners, refrigerators, coolers, and CCTV cameras from the world's most reliable brands.</p><div class="about-stats"><div class="about-stat"><div class="number">6+</div><div class="label">Years of Excellence</div></div><div class="about-stat"><div class="number">50K+</div><div class="label">Happy Customers</div></div><div class="about-stat"><div class="number">100+</div><div class="label">Expert Team</div></div></div></div></div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" id="contact">
+    <div class="container"><div class="footer-grid"><div class="footer-brand"><h3 class="nav-logo">Zeetech</h3><p>Premium home electronics for the modern home.</p><div class="footer-social"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a></div></div>
+    <div class="footer-column"><h4>Shop</h4><ul><li><a href="products.html">All Products</a></li><li><a href="products.html?cat=ac">Air Conditioners</a></li><li><a href="products.html?cat=cooler">Coolers</a></li><li><a href="products.html?cat=refrigerator">Refrigerators</a></li><li><a href="products.html?cat=cctv">CCTV Cameras</a></li></ul></div>
+    <div class="footer-column"><h4>Support</h4><ul><li><a href="#">Warranty</a></li><li><a href="#">Returns</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+    <div class="footer-column"><h4>Contact</h4><ul><li><i class="fas fa-map-marker-alt"></i> Karachi, PK</li><li><i class="fas fa-envelope"></i> info@zeetech.pk</li><li><i class="fas fa-phone"></i> +92 300 1234567</li></ul></div></div>
+    <div class="footer-bottom">&copy; 2024 Zeetech. All rights reserved.</div></div>
+  </footer>
+
+  <script>
+    // ===== PRODUCTS DATABASE =====
+    const products = [
+      { id: 1, name: "Dawlance AC Inverter 1.5 Ton", category: "ac", price: 159999, originalPrice: 189999, discount: 16, image: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&h=300&fit=crop" },
+      { id: 2, name: "Gree AC 1 Ton", category: "ac", price: 119999, originalPrice: 139999, discount: 14, image: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&h=300&fit=crop" },
+      { id: 3, name: "Haier AC 2 Ton", category: "ac", price: 189999, originalPrice: 219999, discount: 13, image: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&h=300&fit=crop" },
+      { id: 4, name: "Orient AC 1.5 Ton", category: "ac", price: 139999, originalPrice: 159999, discount: 12, image: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&h=300&fit=crop" },
+      { id: 5, name: "Kenwood AC 1 Ton", category: "ac", price: 109999, originalPrice: 129999, discount: 15, image: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&h=300&fit=crop" },
+      { id: 6, name: "Super Asia Cooler 45L", category: "cooler", price: 24999, originalPrice: 34999, discount: 28, image: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&h=300&fit=crop" },
+      { id: 7, name: "Eco Cooler 65L", category: "cooler", price: 32999, originalPrice: 44999, discount: 26, image: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&h=300&fit=crop" },
+      { id: 8, name: "Kenwood Cooler 35L", category: "cooler", price: 19999, originalPrice: 27999, discount: 28, image: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&h=300&fit=crop" },
+      { id: 9, name: "Dawlance Refrigerator 18 cu ft", category: "refrigerator", price: 189999, originalPrice: 229999, discount: 17, image: "https://images.unsplash.com/photo-1571175443880-49e1d58b2c63?w=400&h=300&fit=crop" },
+      { id: 10, name: "Haier Refrigerator 15 cu ft", category: "refrigerator", price: 149999, originalPrice: 179999, discount: 16, image: "https://images.unsplash.com/photo-1571175443880-49e1d58b2c63?w=400&h=300&fit=crop" },
+      { id: 11, name: "PEL Refrigerator 20 cu ft", category: "refrigerator", price: 209999, originalPrice: 249999, discount: 16, image: "https://images.unsplash.com/photo-1571175443880-49e1d58b2c63?w=400&h=300&fit=crop" },
+      { id: 12, name: "Samsung Refrigerator 22 cu ft", category: "refrigerator", price: 239999, originalPrice: 289999, discount: 17, image: "https://images.unsplash.com/photo-1571175443880-49e1d58b2c63?w=400&h=300&fit=crop" },
+      { id: 13, name: "Hikvision 4MP CCTV Camera", category: "cctv", price: 15999, originalPrice: 21999, discount: 27, image: "https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?w=400&h=300&fit=crop" },
+      { id: 14, name: "Dahua 8MP Camera", category: "cctv", price: 24999, originalPrice: 34999, discount: 28, image: "https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?w=400&h=300&fit=crop" },
+      { id: 15, name: "EZVIZ 360° Camera", category: "cctv", price: 18999, originalPrice: 25999, discount: 26, image: "https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?w=400&h=300&fit=crop" },
+      { id: 16, name: "Xiaomi 360° Home Camera", category: "cctv", price: 12999, originalPrice: 17999, discount: 27, image: "https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?w=400&h=300&fit=crop" }
+    ];
+
+    // Featured products (top 8 products)
+    const featuredProducts = products.slice(0, 8);
+
+    // ===== USER PROFILE =====
+    function updateUserProfile() {
+      const loggedInUser = JSON.parse(localStorage.getItem('zeetech_logged_in'));
+      const userNameSpan = document.getElementById('userNameDisplay');
+      const authBtn = document.getElementById('authBtn');
+      if (loggedInUser && loggedInUser.isLoggedIn) {
+        userNameSpan.innerHTML = `<i class="fas fa-user-circle"></i> ${loggedInUser.name}`;
+        authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+        authBtn.href = '#';
+        authBtn.onclick = function(e) { e.preventDefault(); localStorage.removeItem('zeetech_logged_in'); showToast('Logged out successfully!'); setTimeout(() => window.location.reload(), 1500); };
+      } else {
+        userNameSpan.innerHTML = '';
+        authBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+        authBtn.href = 'login.html';
+        authBtn.onclick = null;
+      }
+    }
+    updateUserProfile();
+
+    // ===== CART =====
+    let cart = JSON.parse(localStorage.getItem('zeetech_cart')) || [];
+    function saveCart() { localStorage.setItem('zeetech_cart', JSON.stringify(cart)); }
+    function updateCartBadge() { const badge = document.getElementById('cartBadge'); if (badge) badge.textContent = cart.reduce((s,i)=>s+i.qty,0); }
+    function addToCart(id) {
+      const product = products.find(p=>p.id===id);
+      const existing = cart.find(i=>i.id===id);
+      existing ? existing.qty++ : cart.push({...product, qty:1});
+      saveCart(); updateCartBadge(); showToast(`${product.name} added to cart!`);
+    }
+    function showToast(msg) { const t=document.createElement('div'); t.textContent=msg; t.style.cssText=`position:fixed; bottom:24px; right:24px; background:linear-gradient(135deg,#00d4ff,#0099cc); color:#000; padding:14px 24px; border-radius:12px; font-weight:600; z-index:10000; animation:slideIn 0.3s ease;`; document.body.appendChild(t); setTimeout(()=>t.remove(),2500); }
+
+    // ===== SEARCH FUNCTION =====
+    let currentSearchTerm = '';
+    
+    function searchProducts() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+      currentSearchTerm = searchTerm;
+      
+      if (searchTerm === '') {
+        document.getElementById('searchResultsInfo').innerHTML = '';
+        renderFeaturedProducts();
+        return;
+      }
+      
+      const filteredProducts = products.filter(product => 
+        product.name.toLowerCase().includes(searchTerm) ||
+        product.category.toLowerCase().includes(searchTerm)
+      );
+      
+      const resultsInfo = document.getElementById('searchResultsInfo');
+      if (filteredProducts.length === 0) {
+        resultsInfo.innerHTML = `<i class="fas fa-search"></i> No products found for "<strong>${searchTerm}</strong>"`;
+      } else {
+        resultsInfo.innerHTML = `<i class="fas fa-search"></i> Found ${filteredProducts.length} product(s) for "<strong>${searchTerm}</strong>"`;
+      }
+      
+      renderSearchResults(filteredProducts);
+    }
+    
+    function renderSearchResults(filteredProducts) {
+      const grid = document.getElementById('featuredGrid');
+      if(!grid) return;
+      
+      if (filteredProducts.length === 0) {
+        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:60px; color:var(--text-secondary);"><i class="fas fa-search" style="font-size:48px; margin-bottom:16px; opacity:0.5;"></i><p>No products found. Try a different search term.</p></div>`;
+        return;
+      }
+      
+      grid.innerHTML = filteredProducts.map(p=>`
+        <div class="product-card">
+          <div class="product-image"><img src="${p.image}">${p.discount?`<span class="discount-tag">-${p.discount}%</span>`:''}</div>
+          <div class="product-info">
+            <h3 class="product-title">${p.name}</h3>
+            <div class="product-price">Rs. ${p.price.toLocaleString()}${p.originalPrice?`<span class="original-price">Rs. ${p.originalPrice.toLocaleString()}</span>`:''}</div>
+            <button class="btn-add-cart" onclick="addToCart(${p.id})"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ===== MARQUEE =====
+    let isMarqueePlaying = true;
+    const marqueeContainer = document.querySelector('.marquee-content');
+    function pauseMarqueeAndScroll(amount) {
+      if (isMarqueePlaying && marqueeContainer) { marqueeContainer.style.animationPlayState = 'paused'; isMarqueePlaying = false; setTimeout(()=>{ if(marqueeContainer){ marqueeContainer.style.animationPlayState = 'running'; isMarqueePlaying = true; } },5000); }
+      const c = document.querySelector('.marquee-container');
+      if(c) c.scrollBy({ left: amount, behavior: 'smooth' });
+    }
+
+    // ===== DISCOUNT BANNER =====
+    function renderDiscountBanner() {
+      const discountProducts = products.filter(p=>p.discount>=15);
+      let html = '';
+      for(let i=0;i<2;i++) html += discountProducts.map(p=>`<div class="discount-card"><div class="discount-image"><img src="${p.image}"><span class="discount-badge">-${p.discount}% OFF</span></div><div class="discount-info"><h4 class="discount-title">${p.name}</h4><div class="discount-price-row"><span class="current-price">Rs. ${p.price.toLocaleString()}</span><span class="old-price">Rs. ${p.originalPrice.toLocaleString()}</span><span class="discount-percent">Save ${p.discount}%</span></div><button class="btn-discount-cart" onclick="addToCart(${p.id})"><i class="fas fa-shopping-cart"></i> Add to Cart</button></div></div>`).join('');
+      const m = document.getElementById('discountMarquee');
+      if(m) m.innerHTML = html;
+    }
+
+    // ===== FEATURED PRODUCTS =====
+    function renderFeaturedProducts() {
+      const grid = document.getElementById('featuredGrid');
+      if(!grid) return;
+      grid.innerHTML = featuredProducts.map(p=>`
+        <div class="product-card">
+          <div class="product-image"><img src="${p.image}">${p.discount?`<span class="discount-tag">-${p.discount}%</span>`:''}</div>
+          <div class="product-info">
+            <h3 class="product-title">${p.name}</h3>
+            <div class="product-price">Rs. ${p.price.toLocaleString()}${p.originalPrice?`<span class="original-price">Rs. ${p.originalPrice.toLocaleString()}</span>`:''}</div>
+            <button class="btn-add-cart" onclick="addToCart(${p.id})"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ===== ANIMATION =====
+    const s = document.createElement('style');
+    s.textContent = '@keyframes slideIn{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}';
+    document.head.appendChild(s);
+
+    // ===== INIT =====
+    renderDiscountBanner();
+    renderFeaturedProducts();
+    updateCartBadge();
+    
+    // Enter key search
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') searchProducts();
+    });
+  </script>
+</body>
+</html>
