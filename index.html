@@ -1009,7 +1009,7 @@
       font-size: 13px;
     }
 
-    /* ===== RESPONSIVE - Mobile 2 Columns ===== */
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 1200px) {
       .featured-grid {
         grid-template-columns: repeat(3, 1fr);
@@ -1148,7 +1148,6 @@
         height: 24px;
       }
 
-      /* Product card mobile adjustments */
       .product-image {
         height: 140px;
       }
@@ -1482,12 +1481,22 @@
     let cart = JSON.parse(localStorage.getItem('zeetech_cart')) || [];
     function saveCart() { localStorage.setItem('zeetech_cart', JSON.stringify(cart)); }
     function updateCartBadge() { const total = cart.reduce((s, i) => s + i.qty, 0); const fb = document.getElementById('floatingCartBadge'); if (fb) fb.textContent = total; }
-    function addToCart(id) {
+
+    // UPDATED: Add to cart + Redirect to cart page
+    function addToCartAndRedirect(id) {
       const product = products.find(p => p.id === id);
       const existing = cart.find(i => i.id === id);
-      existing ? existing.qty++ : cart.push({ ...product, qty: 1 });
-      saveCart(); updateCartBadge(); showToast(`${product.name} added to cart!`);
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.push({ ...product, qty: 1 });
+      }
+      saveCart();
+      updateCartBadge();
+      // Redirect to cart page
+      window.location.href = 'cart.html';
     }
+
     function showToast(msg) { const t = document.createElement('div'); t.textContent = msg; t.style.cssText = `position:fixed; bottom:24px; right:24px; background:linear-gradient(135deg,#00d4ff,#0099cc); color:#000; padding:14px 24px; border-radius:12px; font-weight:600; z-index:10000; animation:slideIn 0.3s ease;`; document.body.appendChild(t); setTimeout(() => t.remove(), 2500); }
 
     // ===== SEARCH FUNCTION =====
@@ -1504,7 +1513,7 @@
       const grid = document.getElementById('featuredGrid');
       if (!grid) return;
       if (filteredProducts.length === 0) { grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:60px; color:var(--text-secondary);"><i class="fas fa-search" style="font-size:48px; margin-bottom:16px; opacity:0.5;"></i><p>No products found. Try a different search term.</p></div>`; return; }
-      grid.innerHTML = filteredProducts.map(p => `<div class="product-card"><div class="product-image"><img src="${p.image}">${p.discount ? `<span class="discount-tag">-${p.discount}%</span>` : ''}</div><div class="product-info"><h3 class="product-title">${p.name}</h3><div class="product-price">Rs. ${p.price.toLocaleString()}${p.originalPrice ? `<span class="original-price">Rs. ${p.originalPrice.toLocaleString()}</span>` : ''}</div><button class="btn-add-cart" onclick="addToCart(${p.id})"><i class="fas fa-shopping-cart"></i> Add to Cart</button></div></div>`).join('');
+      grid.innerHTML = filteredProducts.map(p => `<div class="product-card"><div class="product-image"><img src="${p.image}">${p.discount ? `<span class="discount-tag">-${p.discount}%</span>` : ''}</div><div class="product-info"><h3 class="product-title">${p.name}</h3><div class="product-price">Rs. ${p.price.toLocaleString()}${p.originalPrice ? `<span class="original-price">Rs. ${p.originalPrice.toLocaleString()}</span>` : ''}</div><button class="btn-add-cart" onclick="addToCartAndRedirect(${p.id})"><i class="fas fa-shopping-cart"></i> Add to Cart</button></div></div>`).join('');
     }
 
     // ===== MARQUEE =====
@@ -1519,7 +1528,7 @@
     function renderDiscountBanner() {
       const discountProducts = products.filter(p => p.discount >= 15);
       let html = '';
-      for (let i = 0; i < 2; i++) html += discountProducts.map(p => `<div class="discount-card"><div class="discount-image"><img src="${p.image}"><span class="discount-badge">-${p.discount}% OFF</span></div><div class="discount-info"><h4 class="discount-title">${p.name}</h4><div class="discount-price-row"><span class="current-price">Rs. ${p.price.toLocaleString()}</span><span class="old-price">Rs. ${p.originalPrice.toLocaleString()}</span><span class="discount-percent">Save ${p.discount}%</span></div><button class="btn-discount-cart" onclick="addToCart(${p.id})"><i class="fas fa-shopping-cart"></i> Add to Cart</button></div></div>`).join('');
+      for (let i = 0; i < 2; i++) html += discountProducts.map(p => `<div class="discount-card"><div class="discount-image"><img src="${p.image}"><span class="discount-badge">-${p.discount}% OFF</span></div><div class="discount-info"><h4 class="discount-title">${p.name}</h4><div class="discount-price-row"><span class="current-price">Rs. ${p.price.toLocaleString()}</span><span class="old-price">Rs. ${p.originalPrice.toLocaleString()}</span><span class="discount-percent">Save ${p.discount}%</span></div><button class="btn-discount-cart" onclick="addToCartAndRedirect(${p.id})"><i class="fas fa-shopping-cart"></i> Add to Cart</button></div></div>`).join('');
       const m = document.getElementById('discountMarquee');
       if (m) m.innerHTML = html;
     }
@@ -1527,7 +1536,7 @@
     function renderFeaturedProducts() {
       const grid = document.getElementById('featuredGrid');
       if (!grid) return;
-      grid.innerHTML = featuredProducts.map(p => `<div class="product-card"><div class="product-image"><img src="${p.image}">${p.discount ? `<span class="discount-tag">-${p.discount}%</span>` : ''}</div><div class="product-info"><h3 class="product-title">${p.name}</h3><div class="product-price">Rs. ${p.price.toLocaleString()}${p.originalPrice ? `<span class="original-price">Rs. ${p.originalPrice.toLocaleString()}</span>` : ''}</div><button class="btn-add-cart" onclick="addToCart(${p.id})"><i class="fas fa-shopping-cart"></i> Add to Cart</button></div></div>`).join('');
+      grid.innerHTML = featuredProducts.map(p => `<div class="product-card"><div class="product-image"><img src="${p.image}">${p.discount ? `<span class="discount-tag">-${p.discount}%</span>` : ''}</div><div class="product-info"><h3 class="product-title">${p.name}</h3><div class="product-price">Rs. ${p.price.toLocaleString()}${p.originalPrice ? `<span class="original-price">Rs. ${p.originalPrice.toLocaleString()}</span>` : ''}</div><button class="btn-add-cart" onclick="addToCartAndRedirect(${p.id})"><i class="fas fa-shopping-cart"></i> Add to Cart</button></div></div>`).join('');
     }
 
     const s = document.createElement('style');
